@@ -143,7 +143,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
           display: { xs: 'none', sm: 'inline-flex' },
         }}
       >
-        ⌘K
+        Search
       </Label>
     </Box>
   );
@@ -162,7 +162,7 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
         PaperProps={{ sx: { mt: 15, overflow: 'unset' } }}
         sx={{ [`& .${dialogClasses.container}`]: { alignItems: 'flex-start' } }}
       >
-        <Box sx={{ p: 3, borderBottom: `solid 1px ${theme.vars.palette.divider}` }}>
+        <Box sx={{ p: 3, borderBottom: `solid 1px ${theme.vars.palette.divider}`, position: 'relative' }}>
           <InputBase
             fullWidth
             autoFocus
@@ -174,9 +174,24 @@ export function Searchbar({ data: navItems = [], sx, ...other }: SearchbarProps)
                 <Iconify icon="eva:search-fill" width={24} sx={{ color: 'text.disabled' }} />
               </InputAdornment>
             }
-            endAdornment={<Label sx={{ letterSpacing: 1, color: 'text.secondary' }}>esc</Label>}
+
+            // endAdornment={<Label sx={{ letterSpacing: 1, color: 'text.secondary' }}>esc</Label>}
             inputProps={{ sx: { typography: 'h6' } }}
+
+
           />
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 16,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'text.secondary'
+            }}
+          >
+            <Iconify icon="eva:close-fill" width={24} />
+          </IconButton>
         </Box>
 
         {notFound ? (

@@ -45,7 +45,7 @@ export function KanbanDetailsCommentList({ comments }: Props) {
                   sx={{
                     borderRadius: 1.5,
                     cursor: 'pointer',
-                    transition: (theme) => theme.transitions.create(['opacity']),
+                    transition: (theme: { transitions: { create: (arg0: string[]) => any; }; }) => theme.transitions.create(['opacity']),
                     '&:hover': { opacity: 0.8 },
                   }}
                 />

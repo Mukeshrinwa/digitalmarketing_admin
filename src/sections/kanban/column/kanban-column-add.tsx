@@ -1,4 +1,5 @@
 import type { BoxProps } from '@mui/material/Box';
+import type { IKanbanColumn } from 'src/types/kanban';
 
 import { useState, useCallback } from 'react';
 
@@ -10,17 +11,18 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { uuidv4 } from 'src/utils/uuidv4';
-
 import { createColumn } from 'src/actions/kanban';
 
 import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export function KanbanColumnAdd({ sx, ...other }: BoxProps) {
-  const [columnName, setColumnName] = useState('');
+interface KanbanColumnAddProps extends BoxProps {
+  boardId?: string;
+}
 
+export function KanbanColumnAdd({ sx, boardId, ...other }: KanbanColumnAddProps) {
+  const [columnName, setColumnName] = useState('');
   const openAddColumn = useBoolean();
 
   const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,18 +31,27 @@ export function KanbanColumnAdd({ sx, ...other }: BoxProps) {
 
   const handleCreateColumn = useCallback(async () => {
     try {
-      const columnData = { id: uuidv4(), name: columnName.trim() ? columnName : 'Untitled' };
+      if (!boardId) {
+        console.error('Board ID is required to create a column');
+        return;
+      }
 
-      createColumn(columnData);
-
+      const columnData: IKanbanColumn = {
+        name: columnName.trim() ? columnName : 'Untitled',
+        boardId,
+        columnName: columnName.trim() ? columnName : 'Untitled',
+        id: ''
+      };
+  
+      await createColumn(columnData);
+  
       setColumnName('');
-
       openAddColumn.onFalse();
     } catch (error) {
       console.error(error);
     }
-  }, [columnName, openAddColumn]);
-
+  }, [columnName, openAddColumn, boardId]);
+  
   const handleKeyUpCreateColumn = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -84,7 +95,6 @@ export function KanbanColumnAdd({ sx, ...other }: BoxProps) {
           </Button>
         )}
       </Box>
-
       <Box sx={{ width: '1px', flexShrink: 0 }} />
     </>
   );

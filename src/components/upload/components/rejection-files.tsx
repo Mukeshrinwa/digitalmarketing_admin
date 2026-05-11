@@ -13,7 +13,7 @@ import { fileData } from '../../file-thumbnail';
 // ----------------------------------------------------------------------
 
 type Props = {
-  files: FileRejection[];
+  files: readonly FileRejection[];
 };
 
 export function RejectionFiles({ files }: Props) {

@@ -54,7 +54,7 @@ export const CONFIG: ConfigValue = {
     redirectPath: paths.dashboard.root,
   },
   /**
-   * Mapbox
+   * APMapboxI
    */
   mapbox: {
     apiKey: import.meta.env.VITE_MAPBOX_API_KEY ?? '',

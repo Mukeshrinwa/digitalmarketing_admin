@@ -7,8 +7,6 @@ import type {} from '@mui/material/themeCssVarsAugmentation';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles';
 
-import { useTranslate } from 'src/locales';
-
 import { useSettingsContext } from 'src/components/settings';
 
 import { createTheme } from './create-theme';
@@ -22,11 +20,9 @@ type Props = {
 };
 
 export function ThemeProvider({ children }: Props) {
-  const { currentLang } = useTranslate();
-
   const settings = useSettingsContext();
 
-  const theme = createTheme(currentLang?.systemValue, settings);
+  const theme = createTheme(settings);
 
   return (
     <CssVarsProvider

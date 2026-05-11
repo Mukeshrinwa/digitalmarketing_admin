@@ -1,1 +1,1 @@
-export * from './kanban-view';
+export * from './TaskCalendarView';

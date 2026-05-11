@@ -5,22 +5,21 @@ import react from '@vitejs/plugin-react-swc';
 
 // ----------------------------------------------------------------------
 
-const PORT = 8080;
-
-const env = loadEnv('all', process.cwd());
+const env = loadEnv('all', process.cwd()); // Load environment variables
+const PORT = parseInt(env.VITE_PORT || '4040', 10); // Ensure PORT is a number
 
 export default defineConfig({
-  // base: env.VITE_BASE_PATH,
+  base: env.VITE_BASE_PATH || '/', // Set the base path (useful when deploying to subdirectories)
   plugins: [
-    react(),
+    react(), // React with SWC for faster builds
     checker({
-      typescript: true,
+      typescript: true, // Enable TypeScript type checking
       eslint: {
-        lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"',
+        lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"', // Lint command for source files
       },
       overlay: {
-        position: 'tl',
-        initialIsOpen: false,
+        position: 'tl', // Error overlay at top-left of the screen
+        initialIsOpen: false, // Do not open overlay by default
       },
     }),
   ],
@@ -28,14 +27,31 @@ export default defineConfig({
     alias: [
       {
         find: /^~(.+)/,
-        replacement: path.join(process.cwd(), 'node_modules/$1'),
+        replacement: path.resolve(process.cwd(), 'node_modules/$1'), // Resolve ~ to node_modules
       },
       {
-        find: /^src(.+)/,
-        replacement: path.join(process.cwd(), 'src/$1'),
+        find: /^src\/(.+)/,
+        replacement: path.resolve(process.cwd(), 'src/$1'), // Resolve src to absolute path for src/
       },
     ],
   },
-  server: { port: PORT, host: true },
-  preview: { port: PORT, host: true },
+  define: {
+    'process.env': process.env
+  },
+  server: {
+    port: PORT, // Use port defined in .env or 3030, and ensure it's a number
+    host: '0.0.0.0', // Allow external access (useful for Docker)
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_URL,
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
+  preview: {
+    port: PORT, // Same port for preview, ensure it's a number
+    host: '0.0.0.0', // Allow external access in preview as well
+  },
 });

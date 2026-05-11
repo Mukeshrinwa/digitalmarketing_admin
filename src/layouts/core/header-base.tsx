@@ -17,7 +17,7 @@ import { SignInButton } from '../components/sign-in-button';
 import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 import { LanguagePopover } from '../components/language-popover';
-import { ContactsPopover } from '../components/contacts-popover';
+// import { ContactsPopover } from '../components/contacts-popover';
 import { WorkspacesPopover } from '../components/workspaces-popover';
 import { NotificationsDrawer } from '../components/notifications-drawer';
 
@@ -96,16 +96,16 @@ export function HeaderBase({
   onOpenNav,
   layoutQuery,
   slotsDisplay: {
-    signIn = true,
+    signIn = false,
     account = true,
     helpLink = true,
-    settings = true,
+    settings = false,
     purchase = true,
     contacts = true,
     searchbar = true,
-    workspaces = true,
+    workspaces = false,
     menuButton = true,
-    localization = true,
+    localization = false,
     notifications = true,
   } = {},
   ...other
@@ -181,7 +181,7 @@ export function HeaderBase({
               )}
 
               {/* -- Contacts popover -- */}
-              {contacts && <ContactsPopover data-slot="contacts" data={data?.contacts} />}
+              {/* {contacts && <ContactsPopover data-slot="contacts" data={data?.contacts} />} */}
 
               {/* -- Settings button -- */}
               {settings && <SettingsButton data-slot="settings" />}

@@ -117,7 +117,7 @@ const ItemBase = forwardRef<HTMLLIElement, ItemBaseProps>(
           position: 'absolute',
           ...(task.priority === 'low' && { color: 'info.main' }),
           ...(task.priority === 'medium' && { color: 'warning.main' }),
-          ...(task.priority === 'hight' && { color: 'error.main' }),
+          ...(task.priority === 'high' && { color: 'error.main' }),
         }}
       />
     );
@@ -160,7 +160,7 @@ const ItemBase = forwardRef<HTMLLIElement, ItemBaseProps>(
 
         <AvatarGroup sx={{ [`& .${avatarGroupClasses.avatar}`]: { width: 24, height: 24 } }}>
           {task?.assignee?.map((user) => (
-            <Avatar key={user.id} alt={user.name} src={user.avatarUrl} />
+            <Avatar key={user.id} alt={user.first_name} src={user.avatarUrl} />
           ))}
         </AvatarGroup>
       </Stack>

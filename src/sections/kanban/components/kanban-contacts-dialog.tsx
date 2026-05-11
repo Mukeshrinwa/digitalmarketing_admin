@@ -12,8 +12,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import ListItemText from '@mui/material/ListItemText';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
 
-import { _contacts } from 'src/_mock';
+import { useGetEmployees } from 'src/actions/kanban';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -27,23 +28,35 @@ type Props = {
   open: boolean;
   onClose: () => void;
   assignee?: IKanbanAssignee[];
+  onAssign?: (employeeId: IKanbanAssignee) => void;
+  onUnassign?: (employeeId: string) => void;
 };
 
-export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
+export function KanbanContactsDialog({ assignee = [], open, onClose, onAssign, onUnassign }: Props) {
   const [searchContact, setSearchContact] = useState('');
+  const { employees, employeesLoading } = useGetEmployees();
 
   const handleSearchContacts = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchContact(event.target.value);
   }, []);
 
-  const dataFiltered = applyFilter({ inputData: _contacts, query: searchContact });
-
+  const dataFiltered = applyFilter({ inputData: employees, query: searchContact });
   const notFound = !dataFiltered.length && !!searchContact;
+
+  if (employeesLoading) {
+    return (
+      <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
+        <Box sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
       <DialogTitle sx={{ pb: 0 }}>
-        Contacts <Typography component="span">({_contacts.length})</Typography>
+        Employees <Typography component="span">({employees.length})</Typography>
       </DialogTitle>
 
       <Box sx={{ px: 3, py: 2.5 }}>
@@ -69,7 +82,7 @@ export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
           <Scrollbar sx={{ height: ITEM_HEIGHT * 6, px: 2.5 }}>
             <Box component="ul">
               {dataFiltered.map((contact) => {
-                const checked = assignee.map((person) => person.name).includes(contact.name);
+                const checked = assignee.map((person) => person.id).includes(contact.id);
 
                 return (
                   <Box
@@ -87,7 +100,7 @@ export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
                     <ListItemText
                       primaryTypographyProps={{ typography: 'subtitle2', sx: { mb: 0.25 } }}
                       secondaryTypographyProps={{ typography: 'caption' }}
-                      primary={contact.name}
+                      primary={contact.first_name}
                       secondary={contact.email}
                     />
 
@@ -101,6 +114,13 @@ export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
                           sx={{ mr: -0.5 }}
                         />
                       }
+                      onClick={() => {
+                        if (checked) {
+                          onUnassign?.(contact._id);
+                        } else {
+                          onAssign?.(contact);
+                        }
+                      }}
                     >
                       {checked ? 'Assigned' : 'Assign'}
                     </Button>
@@ -126,7 +146,7 @@ function applyFilter({ inputData, query }: ApplyFilterProps) {
   if (query) {
     inputData = inputData.filter(
       (contact) =>
-        contact.name.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
+        contact.first_name.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
         contact.email.toLowerCase().indexOf(query.toLowerCase()) !== -1
     );
   }

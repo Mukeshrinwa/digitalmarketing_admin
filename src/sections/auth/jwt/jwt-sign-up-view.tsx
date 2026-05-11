@@ -30,10 +30,11 @@ export type SignUpSchemaType = zod.infer<typeof SignUpSchema>;
 export const SignUpSchema = zod.object({
   firstName: zod.string().min(1, { message: 'First name is required!' }),
   lastName: zod.string().min(1, { message: 'Last name is required!' }),
-  email: zod
+  mobile: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(10, { message: 'Mobile number must be exactly 10 digits!' })
+    .max(10, { message: 'Mobile number must be exactly 10 digits!' })
+    .regex(/^[6-9]\d{9}$/, { message: 'Mobile number must be a valid Indian number!' }),
   password: zod
     .string()
     .min(1, { message: 'Password is required!' })
@@ -71,7 +72,7 @@ export function JwtSignUpView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await signUp({
-        email: data.email,
+        email: data.mobile,
         password: data.password,
         firstName: data.firstName,
         lastName: data.lastName,

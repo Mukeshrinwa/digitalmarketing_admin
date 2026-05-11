@@ -31,9 +31,18 @@ export function AuthProvider({ children }: Props) {
   const checkUserSession = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
+      console.log(accessToken,"new my token")
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
+
+        // Check for mock user (for hardcoded credentials testing)
+        const mockUserData = sessionStorage.getItem("MOCK_USER");
+        if (mockUserData) {
+          const mockUser = JSON.parse(mockUserData);
+          setState({ user: { ...mockUser, accessToken }, loading: false });
+          return;
+        }
 
         const res = await axios.get(endpoints.auth.me);
 

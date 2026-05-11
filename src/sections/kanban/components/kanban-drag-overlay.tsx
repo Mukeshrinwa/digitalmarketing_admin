@@ -13,7 +13,7 @@ import { KanbanColumnToolBar } from '../column/kanban-column-toolbar';
 // ----------------------------------------------------------------------
 
 type KanbanDragOverlayProps = Pick<IKanban, 'tasks' | 'columns'> & {
-  activeId: UniqueIdentifier | null;
+  activeId: UniqueIdentifier;
   sx?: SxProps<Theme>;
 };
 
@@ -22,7 +22,7 @@ const dropAnimation: DropAnimation = {
 };
 
 export function KanbanDragOverlay({ columns, tasks, activeId, sx }: KanbanDragOverlayProps) {
-  const columnIds = columns.map((column) => column.id);
+  const columnIds = columns.map((column) => String(column.id));
 
   const activeColumn = columns.find((column) => column.id === activeId) as IKanbanColumn;
 
@@ -35,8 +35,8 @@ export function KanbanDragOverlay({ columns, tasks, activeId, sx }: KanbanDragOv
       <DndDragOverlay adjustScale={false} dropAnimation={dropAnimation}>
         {activeId ? (
           <>
-            {columnIds.includes(activeId) ? (
-              <ColumnOverlay column={activeColumn} tasks={tasks[activeId]} sx={sx} />
+            {columnIds.includes(String(activeId)) ? (
+              <ColumnOverlay column={activeColumn} tasks={tasks[activeId] || []} sx={sx} />
             ) : (
               <TaskItemOverlay task={activeTask} sx={sx} />
             )}

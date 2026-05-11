@@ -1,40 +1,46 @@
-import type { LanguageValue } from 'src/locales';
 import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { m } from 'framer-motion';
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-
-import { useTranslate } from 'src/locales';
 
 import { varHover } from 'src/components/animate';
 import { FlagIcon } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
-
 export type LanguagePopoverProps = IconButtonProps & {
   data?: {
     value: string;
     label: string;
     countryCode: string;
   }[];
+  currentLanguage?: string;
+  onLanguageChange?: (lang: string) => void;
 };
 
-export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProps) {
+export function LanguagePopover({
+  data = [],
+  currentLanguage,
+  onLanguageChange,
+  sx,
+  ...other
+}: LanguagePopoverProps) {
   const popover = usePopover();
+  const [locale, setLocale] = useState<string>(currentLanguage || data[0]?.value || '');
 
-  const { onChangeLang, currentLang } = useTranslate();
+  const currentLang = data.find((lang) => lang.value === locale);
 
   const handleChangeLang = useCallback(
-    (newLang: LanguageValue) => {
-      onChangeLang(newLang);
+    (newLang: string) => {
+      setLocale(newLang);
+      onLanguageChange?.(newLang); 
       popover.onClose();
     },
-    [onChangeLang, popover]
+    [popover, onLanguageChange]
   );
 
   return (
@@ -54,7 +60,7 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
         }}
         {...other}
       >
-        <FlagIcon code={currentLang.countryCode} />
+        <FlagIcon code={currentLang?.countryCode} />
       </IconButton>
 
       <CustomPopover open={popover.open} anchorEl={popover.anchorEl} onClose={popover.onClose}>
@@ -62,8 +68,8 @@ export function LanguagePopover({ data = [], sx, ...other }: LanguagePopoverProp
           {data?.map((option) => (
             <MenuItem
               key={option.value}
-              selected={option.value === currentLang.value}
-              onClick={() => handleChangeLang(option.value as LanguageValue)}
+              selected={option.value === currentLang?.value}
+              onClick={() => handleChangeLang(option.value)}
             >
               <FlagIcon code={option.countryCode} />
               {option.label}

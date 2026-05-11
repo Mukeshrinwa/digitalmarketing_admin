@@ -33,6 +33,11 @@ export function isValidToken(accessToken: string) {
     return false;
   }
 
+  // Mock token support for testing (format: mock-jwt-token-* or starts with "mock-")
+  if (accessToken.startsWith('mock-') || accessToken.startsWith('mock-jwt-token-')) {
+    return true;
+  }
+
   try {
     const decoded = jwtDecode(accessToken);
 
@@ -75,6 +80,11 @@ export async function setSession(accessToken: string | null) {
       sessionStorage.setItem(STORAGE_KEY, accessToken);
 
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+      // Skip JWT decode/expiry for mock tokens
+      if (accessToken.startsWith('mock-') || accessToken.startsWith('mock-jwt-token-')) {
+        return;
+      }
 
       const decodedToken = jwtDecode(accessToken); // ~3 days by minimals server
 

@@ -63,34 +63,32 @@ export const Image = forwardRef<HTMLSpanElement, ImageProps>(
     ref
   ) => {
     const content = (
-      <Box
-        component={LazyLoadImage}
-        alt={alt}
-        src={src}
-        delayTime={delayTime}
-        threshold={threshold}
-        beforeLoad={beforeLoad}
-        delayMethod={delayMethod}
-        placeholder={placeholder}
-        wrapperProps={wrapperProps}
-        scrollPosition={scrollPosition}
-        visibleByDefault={visibleByDefault}
-        effect={visibleByDefault || disabledEffect ? undefined : effect}
-        useIntersectionObserver={useIntersectionObserver}
-        wrapperClassName={wrapperClassName || imageClasses.wrapper}
-        placeholderSrc={
+      (LazyLoadImage as any)({
+        alt,
+        src,
+        delayTime,
+        threshold,
+        beforeLoad,
+        delayMethod,
+        placeholder,
+        wrapperProps,
+        scrollPosition,
+        visibleByDefault,
+        effect: visibleByDefault || disabledEffect ? undefined : effect,
+        useIntersectionObserver,
+        wrapperClassName: wrapperClassName || imageClasses.wrapper,
+        placeholderSrc:
           visibleByDefault || disabledEffect
             ? `${CONFIG.site.basePath}/assets/transparent.png`
-            : `${CONFIG.site.basePath}/assets/placeholder.svg`
-        }
-        sx={{
-          width: 1,
-          height: 1,
+            : `${CONFIG.site.basePath}/assets/placeholder.svg`,
+        style: {
+          width: '100%',
+          height: '100%',
           objectFit: 'cover',
           verticalAlign: 'bottom',
-          aspectRatio: ratio,
-        }}
-      />
+          aspectRatio: ratio ? String(ratio) : undefined,
+        },
+      })
     );
 
     return (

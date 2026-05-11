@@ -23,7 +23,7 @@ import { KanbanInputName } from '../components/kanban-input-name';
 type Props = {
   handleProps?: any;
   totalTasks?: number;
-  columnName: string;
+  columnName: string ;
   onClearColumn?: () => void;
   onDeleteColumn?: () => void;
   onToggleAddTask?: () => void;
@@ -59,6 +59,7 @@ export function KanbanColumnToolBar({
     setName(event.target.value);
   }, []);
 
+
   const handleKeyUpUpdateColumn = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -86,10 +87,10 @@ export function KanbanColumnToolBar({
         <KanbanInputName
           inputRef={renameRef}
           placeholder="Column name"
-          value={name}
-          onChange={handleChangeName}
-          onKeyUp={handleKeyUpUpdateColumn}
-          inputProps={{ id: `input-column-${name}` }}
+          value={name} 
+          onChange={handleChangeName} 
+          onKeyUp={handleKeyUpUpdateColumn} 
+          inputProps={{ id: `input-column-${columnName}` }}
           sx={{ mx: 1 }}
         />
 

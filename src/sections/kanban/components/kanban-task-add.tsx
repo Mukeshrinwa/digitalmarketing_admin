@@ -28,16 +28,18 @@ export function KanbanTaskAdd({ status, openAddTask, onAddTask, onCloseAddTask }
       id: uuidv4(),
       status,
       name: taskName.trim() ? taskName : 'Untitled',
+      description: '', 
       priority: 'medium',
       attachments: [],
       labels: [],
       comments: [],
       assignee: [],
-      due: [null, null],
+      due: ['', ''], 
       reporter: { id: _mock.id(16), name: _mock.fullName(16), avatarUrl: _mock.image.avatar(16) },
     }),
     [status, taskName]
   );
+  
 
   const handleChangeName = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTaskName(event.target.value);
