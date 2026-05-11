@@ -6,45 +6,23 @@ import { MainLayout } from 'src/layouts/main';
 import { SplashScreen } from 'src/components/loading-screen';
 
 import { authRoutes } from './auth';
+import { mainRoutes } from './main';
+import { authDemoRoutes } from './auth-demo';
 import { dashboardRoutes } from './dashboard';
-
-import { GuestGuard } from 'src/auth/guard';
-import { AuthSplitLayout } from 'src/layouts/auth-split';
+import { componentsRoutes } from './components';
 
 // ----------------------------------------------------------------------
 
 const HomePage = lazy(() => import('src/pages/home'));
 
-const JwtSignInPage = lazy(() => import('src/pages/auth/jwt/sign-in'));
-
 export function Router() {
   return useRoutes([
-    // Default: redirect to login
-    { path: '/', element: <Navigate to="/login" replace /> },
-
-    // Friendly /login path mapped to existing JWT sign-in
     {
-      path: '/login',
-      element: (
-        <Suspense fallback={<SplashScreen />}>
-          <GuestGuard>
-            <AuthSplitLayout section={{ title: 'Hi, Welcome back' }}>
-              <JwtSignInPage />
-            </AuthSplitLayout>
-          </GuestGuard>
-        </Suspense>
-      ),
-    },
-
-    // Auth
-    ...authRoutes,
-
-    // Dashboard
-    ...dashboardRoutes,
-
-    // Optional Home (kept but not default)
-    {
-      path: '/home',
+      path: '/',
+      /**
+       * Skip home page
+       * element: <Navigate to={CONFIG.auth.redirectPath} replace />,
+       */
       element: (
         <Suspense fallback={<SplashScreen />}>
           <MainLayout>
@@ -53,6 +31,19 @@ export function Router() {
         </Suspense>
       ),
     },
+
+    // Auth
+    ...authRoutes,
+    ...authDemoRoutes,
+
+    // Dashboard
+    ...dashboardRoutes,
+
+    // Main
+    ...mainRoutes,
+
+    // Components
+    ...componentsRoutes,
 
     // No match
     { path: '*', element: <Navigate to="/404" replace /> },

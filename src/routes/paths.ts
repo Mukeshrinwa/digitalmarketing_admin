@@ -179,40 +179,5 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
-    // Custom admin sections
-    cms: {
-      root: `${ROOTS.DASHBOARD}/cms`,
-      home: `${ROOTS.DASHBOARD}/cms/home`,
-      about: `${ROOTS.DASHBOARD}/cms/about`,
-      contact: `${ROOTS.DASHBOARD}/cms/contact`,
-      headerFooter: `${ROOTS.DASHBOARD}/cms/header-footer`,
-    },
-    services: {
-      root: `${ROOTS.DASHBOARD}/services`,
-    },
-    blogs: {
-      root: `${ROOTS.DASHBOARD}/blogs`,
-    },
-    team: {
-      root: `${ROOTS.DASHBOARD}/team`,
-    },
-    portfolio: {
-      root: `${ROOTS.DASHBOARD}/portfolio`,
-    },
-    testimonials: {
-      root: `${ROOTS.DASHBOARD}/testimonials`,
-    },
-    gallery: {
-      root: `${ROOTS.DASHBOARD}/gallery`,
-    },
-    leads: {
-      root: `${ROOTS.DASHBOARD}/leads`,
-    },
-    seo: {
-      root: `${ROOTS.DASHBOARD}/seo-settings`,
-    },
-    website: {
-      settings: `${ROOTS.DASHBOARD}/website-settings`,
-    },
   },
 };
